@@ -1,10 +1,11 @@
 import React from 'react'
-import './App.css'
+import './App.sass'
+import FeedbackForm from './components/Form/FeedbackForm'
 
 function App() {
 	return (
-		<div className="App">
- 
+		<div className='main-container'>
+			<FeedbackForm/>
 		</div>
 	)
 }
