@@ -18,7 +18,7 @@ const NameSurname:FC<{ name: string }> = ({ name }) => {
 		let error = ''
 
 		const data = event.target.value.toUpperCase()
-		if(true){
+		if(!regName.test(data)){
 			error = 'Incorrect name value'
 		}
 		setData( { name, error, data })
@@ -32,7 +32,7 @@ const NameSurname:FC<{ name: string }> = ({ name }) => {
 	return (
 		<div>
 			<input type="text" className='inputs name-input' placeholder='Name and Surname' value={data.data} onChange={e=>nameHandler(e)}/>
-			<p className='error-message'>{data.error}</p>
+			<p className={`error-message ${data.error?'error-message--visible':''}`}>{data.error}</p>
 		</div>
 	)
 }

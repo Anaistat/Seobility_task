@@ -19,9 +19,16 @@
     border-bottom: 0.8px solid #fff3dc
 
 .error-message
-  color: #ff2a2a
-  height: 15px
+  opacity: 0
+  transition: opacity 0.3s ease-out
+  height: 20px
   font-size: 14px
+  margin-top: 5px
+
+  &--visible
+    color: #ff2a2a
+    opacity: 1
+    transition: opacity 0.3s ease-out
 
 .send-form
   align-self: center
