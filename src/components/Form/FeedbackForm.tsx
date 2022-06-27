@@ -12,9 +12,14 @@ interface Feedback{
 	[key: string]: string
 }
 
+interface ServerResponse {
+	status: 'error' | 'success'
+	message: string
+}
+
 const FeedbackForm = () => {
 
-	const [serverResponse, setServerResponse] = useState<string>('')
+	const [serverResponse, setServerResponse] = useState<ServerResponse | undefined>()
 	const [formData, setFormData] = useState<Map<string, FieldData>>(new Map())
 	const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Init)
 
@@ -62,22 +67,25 @@ const FeedbackForm = () => {
 		let response = await fetch('https://my-json-server.typicode.com/anaistat/test_server/statuses', {
 			method: 'GET'
 		})
-		let result = await response.json()
-		if(result[0].status === 'success'){
-			setFormStatus(FormStatus.Success)
-			setServerResponse(result[0].message)
-		}
-		if(result[0].status === 'error'){
-			setFormStatus(FormStatus.Error)
-			setServerResponse(result[0].message)
-		}
+		let result: ServerResponse[] = await response.json()
+		setServerResponse(result[0])
 	}
 
 	useEffect(()=>{
 		if(formStatus === FormStatus.Init || formStatus === FormStatus.Sending){
-			setServerResponse('')
+			setServerResponse(undefined)
 		}
 	}, [formStatus])
+
+	const ServerMessage = () => {
+		const styles = ['server-response']
+		if (serverResponse) {
+			styles.push(serverResponse.status === 'error'? 'server-response--error' : 'server-response--success')
+		}
+		return <p className={styles.join(' ')}>{ serverResponse?.message }</p>
+
+
+	}
 
 
 	return (
@@ -89,7 +97,7 @@ const FeedbackForm = () => {
 				<DateOfBirth name='date-of-birth'/>
 				<Message name='message'/>
 				<button className='send-form' disabled={(formStatus !== FormStatus.Correct && formStatus !== FormStatus.Success)}>Send</button>
-				<p className={formStatus === FormStatus.Error?'server-response-error':'server-response'}>{serverResponse}</p>
+				<ServerMessage/>
 			</form>
 		</FormContext.Provider>
 	)
