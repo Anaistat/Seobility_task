@@ -1,7 +1,7 @@
 {
   "name": "seobility-task",
   "version": "0.1.0",
-  "homepage": "https://anaistat.github.io/seobility_task",
+  "homepage": "https://anaistat.github.io/Seobility_task/",
   "private": false,
   "dependencies": {
     "react": "^18.2.0",
