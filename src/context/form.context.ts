@@ -1,16 +1,14 @@
 import { createContext, Dispatch, SetStateAction } from 'react'
-import { FetchStatus, FieldData } from '../types'
+import { FieldData, FormStatus } from '../types'
 
 interface FormContextInterface{
 	updateField: (data: FieldData) => void
-	fetchStatus: FetchStatus
-	setFetchStatus: Dispatch<SetStateAction<FetchStatus>>
+	formStatus: FormStatus
 }
 
 const FormContext = createContext<FormContextInterface>({
 	updateField: data => {},
-	fetchStatus: FetchStatus.Nothing,
-	setFetchStatus: () => {}
+	formStatus: FormStatus.Init,
 })
 
 export default FormContext

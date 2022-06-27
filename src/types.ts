@@ -4,8 +4,9 @@ export type FieldData = {
 	data: string
 }
 
-export enum FetchStatus {
-	Nothing,
+export enum FormStatus {
+	Init,
+	Correct,
 	Sending,
 	Success,
 	Error

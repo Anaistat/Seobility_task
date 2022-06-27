@@ -5,7 +5,7 @@ import Email from '../Email/Email'
 import Number from '../Number/Number'
 import DateOfBirth from '../DateOfBirth/DateOfBirth'
 import Message from '../Message/Message'
-import { FetchStatus, FieldData } from '../../types'
+import { FieldData, FormStatus } from '../../types'
 import FormContext from '../../context/form.context'
 
 interface Feedback{
@@ -16,25 +16,40 @@ const FeedbackForm = () => {
 
 	const [serverResponse, setServerResponse] = useState<string>('')
 	const [formData, setFormData] = useState<Map<string, FieldData>>(new Map())
-	const [fetchStatus, setFetchStatus] = useState<FetchStatus>(FetchStatus.Nothing)
+	const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Init)
 
 	const updateField = (data: FieldData) =>{
-		const newMap: Map<string, FieldData> = new Map(Array.from(formData))
-		newMap.set(data.name, data)
-		setFormData(newMap)
+		setFormData(prevState => {
+			const newMap: Map<string, FieldData> = new Map(Array.from(prevState))
+			newMap.set(data.name, data)
+			return newMap
+		})
 	}
 
-	const sendForm = async (e:FormEvent<HTMLFormElement>) =>{
+	const clearForm = () => {
+		setFormData(new Map())
+	}
+
+	useEffect(()=>{
+		const data = Array.from(formData)
+		if (data.some(e=>e[1].error || !e[1].data)) {
+			return setFormStatus(FormStatus.Error)
+		}
+		setFormStatus(FormStatus.Correct)
+	}, [formData])
+
+	const sendForm = async (e: FormEvent<HTMLFormElement>) =>{
 		e.preventDefault()
-		setFetchStatus(FetchStatus.Sending)
+		setFormStatus(FormStatus.Sending)
 		const data = Array.from(formData)
 		let feedbackData: Feedback = {}
-		if(data.some(value=>value[1].error)){
+		if(data.some(value=>value[1].error || !value[1].data)){
 			return
 		}
 		data.forEach(e=>{
 			feedbackData[e[0]] = e[1].data
 		})
+
 		// let response = await fetch('https://my-json-server.typicode.com/anaistat/test_server/statuses', {
 		// 	method: 'POST',
 		// 	headers: {
@@ -49,28 +64,31 @@ const FeedbackForm = () => {
 		})
 		let result = await response.json()
 		if(result[0].status === 'success'){
-			setFetchStatus(FetchStatus.Success)
+			setFormStatus(FormStatus.Success)
 			setServerResponse(result[0].message)
 		}
-
+		if(result[0].status === 'error'){
+			setFormStatus(FormStatus.Error)
+			setServerResponse(result[0].message)
+		}
 	}
 
 	useEffect(()=>{
-		if(fetchStatus === FetchStatus.Nothing || fetchStatus === FetchStatus.Sending){
+		if(formStatus === FormStatus.Init || formStatus === FormStatus.Sending){
 			setServerResponse('')
 		}
-	}, [fetchStatus])
+	}, [formStatus])
 
 
 	return (
-		<FormContext.Provider value={ { updateField, fetchStatus, setFetchStatus } }>
+		<FormContext.Provider value={ { updateField, formStatus } }>
 			<form className='feedback-form' onSubmit={sendForm}>
 				<NameSurname name='name-surname'/>
 				<Email name='email'/>
 				<Number name='number'/>
 				<DateOfBirth name='date-of-birth'/>
 				<Message name='message'/>
-				<button className='send-form' disabled={(fetchStatus === FetchStatus.Sending)}>Send</button>
+				<button className='send-form' disabled={(formStatus !== FormStatus.Correct && formStatus !== FormStatus.Success)}>Send</button>
 				<p className='server-response'>{serverResponse}</p>
 			</form>
 		</FormContext.Provider>

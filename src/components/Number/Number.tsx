@@ -1,11 +1,11 @@
 import React, { ChangeEvent, FC, useCallback, useContext, useEffect, useState } from 'react'
 import './Number.sass'
 import FormContext from '../../context/form.context'
-import { FetchStatus, FieldData } from '../../types'
+import { FieldData, FormStatus } from '../../types'
 
 const Number:FC<{ name: string }> = ({ name }) => {
 
-	const { updateField, fetchStatus, setFetchStatus } = useContext(FormContext)
+	const { updateField, formStatus } = useContext(FormContext)
 	const [data, setData] = useState<FieldData>({
 		name,
 		error: '',
@@ -14,7 +14,6 @@ const Number:FC<{ name: string }> = ({ name }) => {
 
 	const phoneRegex:RegExp = new RegExp(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/)
 	const phoneHandler = useCallback((event: ChangeEvent<HTMLInputElement>) =>{
-		setFetchStatus(FetchStatus.Nothing)
 		let error = ''
 
 		const data = event.target.value
@@ -29,14 +28,14 @@ const Number:FC<{ name: string }> = ({ name }) => {
 	}, [data])
 
 	useEffect(()=>{
-		if(fetchStatus === FetchStatus.Success){
+		if(formStatus === FormStatus.Success){
 			setData({
 				name,
 				error: '',
 				data: ''
 			})
 		}
-	}, [fetchStatus])
+	}, [formStatus])
 
 
 	return (
