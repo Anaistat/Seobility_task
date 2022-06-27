@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/Seobility_task/static/css/main.00c7772c.css",
-    "main.js": "/Seobility_task/static/js/main.d31e3304.js",
+    "main.css": "/Seobility_task/static/css/main.2d1a4200.css",
+    "main.js": "/Seobility_task/static/js/main.4c483b0a.js",
     "static/media/bg.JPG": "/Seobility_task/static/media/bg.149ec6c0fdcd79a4b786.JPG",
     "index.html": "/Seobility_task/index.html",
-    "main.00c7772c.css.map": "/Seobility_task/static/css/main.00c7772c.css.map",
-    "main.d31e3304.js.map": "/Seobility_task/static/js/main.d31e3304.js.map"
+    "main.2d1a4200.css.map": "/Seobility_task/static/css/main.2d1a4200.css.map",
+    "main.4c483b0a.js.map": "/Seobility_task/static/js/main.4c483b0a.js.map"
   },
   "entrypoints": [
-    "static/css/main.00c7772c.css",
-    "static/js/main.d31e3304.js"
+    "static/css/main.2d1a4200.css",
+    "static/js/main.4c483b0a.js"
   ]
 }
