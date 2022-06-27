@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useContext, useEffect, useState } from 'react'
 import './Message.sass'
 import FormContext from '../../context/form.context'
-import { FieldData } from '../../types'
+import { FetchStatus, FieldData } from '../../types'
 
 const Message:FC<{name: string}> = ({ name }) => {
 
@@ -10,7 +10,7 @@ const Message:FC<{name: string}> = ({ name }) => {
 		outOfRange: 'out-of-range'
 	}
 
-	const { updateField } = useContext(FormContext)
+	const { updateField, fetchStatus, setFetchStatus } = useContext(FormContext)
 	const [data, setData] = useState<FieldData>({
 		name,
 		error: '',
@@ -18,6 +18,7 @@ const Message:FC<{name: string}> = ({ name }) => {
 	})
 
 	const messageHandler = useCallback((event: ChangeEvent<HTMLTextAreaElement>) =>{
+		setFetchStatus(FetchStatus.Nothing)
 		let error = ''
 
 		const data = event.target.value
@@ -30,6 +31,16 @@ const Message:FC<{name: string}> = ({ name }) => {
 	useEffect(()=>{
 		updateField(data)
 	}, [data])
+
+	useEffect(()=>{
+		if(fetchStatus === FetchStatus.Success){
+			setData({
+				name,
+				error: '',
+				data: ''
+			})
+		}
+	}, [fetchStatus])
 
 
 

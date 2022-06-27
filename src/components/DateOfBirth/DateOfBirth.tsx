@@ -1,11 +1,11 @@
 import React, { ChangeEvent, FC, useCallback, useContext, useEffect, useState } from 'react'
 import './DateOfBirth.sass'
 import FormContext from '../../context/form.context'
-import { FieldData } from '../../types'
+import { FetchStatus, FieldData } from '../../types'
 
 const DateOfBirth:FC<{name: string}> = ({ name }) => {
 
-	const { updateField } = useContext(FormContext)
+	const { updateField, fetchStatus, setFetchStatus } = useContext(FormContext)
 	const [data, setData] = useState<FieldData>({
 		name,
 		error: '',
@@ -13,6 +13,7 @@ const DateOfBirth:FC<{name: string}> = ({ name }) => {
 	})
 
 	const birthdayHandler = useCallback((event: ChangeEvent<HTMLInputElement>) =>{
+		setFetchStatus(FetchStatus.Nothing)
 		let error = ''
 
 		const data = new Date(event.target.value).toLocaleDateString()
@@ -25,6 +26,16 @@ const DateOfBirth:FC<{name: string}> = ({ name }) => {
 	useEffect(()=>{
 		updateField(data)
 	}, [data])
+
+	useEffect(()=>{
+		if(fetchStatus === FetchStatus.Success){
+			setData({
+				name,
+				error: '',
+				data: ''
+			})
+		}
+	}, [fetchStatus])
 
 	return (
 		<div>

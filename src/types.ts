@@ -3,3 +3,10 @@ export type FieldData = {
 	error: string
 	data: string
 }
+
+export enum FetchStatus {
+	Nothing,
+	Sending,
+	Success,
+	Error
+}

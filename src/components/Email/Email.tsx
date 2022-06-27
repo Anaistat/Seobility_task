@@ -1,11 +1,11 @@
 import React, { ChangeEvent, FC, useCallback, useContext, useEffect, useState } from 'react'
 import './Email.sass'
 import FormContext from '../../context/form.context'
-import { FieldData } from '../../types'
+import { FetchStatus, FieldData } from '../../types'
 
 const Email:FC<{ name: string }> = ({ name }) => {
 
-	const { updateField } = useContext(FormContext)
+	const { updateField, fetchStatus, setFetchStatus } = useContext(FormContext)
 	const [data, setData] = useState<FieldData>({
 		name,
 		error: '',
@@ -15,6 +15,7 @@ const Email:FC<{ name: string }> = ({ name }) => {
 	let emailRegex:RegExp = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
 
 	const emailHandler = useCallback((event: ChangeEvent<HTMLInputElement>) =>{
+		setFetchStatus(FetchStatus.Nothing)
 		let error = ''
 
 		const data = event.target.value
@@ -28,9 +29,19 @@ const Email:FC<{ name: string }> = ({ name }) => {
 		updateField(data)
 	}, [data])
 
+	useEffect(()=>{
+		if(fetchStatus === FetchStatus.Success){
+			setData({
+				name,
+				error: '',
+				data: ''
+			})
+		}
+	}, [fetchStatus])
+
 	return (
 		<div>
-			<input type='email' className='inputs' placeholder='Email' value={data.data} onChange={e=>emailHandler(e)}/>
+			<input type='email' className='inputs' placeholder='Email' value={data.data} onChange={e=>emailHandler(e)} onReset={()=>console.log('1')}/>
 			<p className={`error-message ${data.error?'error-message--visible':''}`}>{data.error}</p>
 		</div>
 	)
