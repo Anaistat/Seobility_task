@@ -89,7 +89,7 @@ const FeedbackForm = () => {
 				<DateOfBirth name='date-of-birth'/>
 				<Message name='message'/>
 				<button className='send-form' disabled={(formStatus !== FormStatus.Correct && formStatus !== FormStatus.Success)}>Send</button>
-				<p className='server-response'>{serverResponse}</p>
+				<p className={formStatus === FormStatus.Error?'server-response-error':'server-response'}>{serverResponse}</p>
 			</form>
 		</FormContext.Provider>
 	)
